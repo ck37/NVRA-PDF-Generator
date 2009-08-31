@@ -29,7 +29,8 @@ require "PDF-Multiline_Output_Functions.pl";
 # that can fit on the Registration Date column/section.  If this 
 # needs to be changed, you will have to test the new width using
 # prStrWidth and carefully set the below variable!
-my  $maxRegTextWidth = 200; 
+#my  $maxRegTextWidth = 200; 
+my  $maxRegTextWidth = 250;
 my  $maxRegTextLines = 10; # TODO: May need to increase this to ~20.
 
 # Setup the font here -- see PDF:Reuse for options
@@ -47,14 +48,16 @@ my  $resultsFile = "";
 my  $text        = "";
 my  $stateName   = "";
 my  $regDeadline = "";
+my  $deadlineText= "";
 
 # Check for minimum number of arguments.
-if ($numArgs >= 5) { 
+if ($numArgs >= 6) { 
    $sourceFile  = $ARGV[0];  
    $resultsFile = $ARGV[1];
    $stateName   = $ARGV[2];
-   $regDeadline = $ARGV[3];
-   $text        = $ARGV[4];
+   $deadlineText= $ARGV[3];
+   $regDeadline = $ARGV[4];
+   $text        = $ARGV[5];
 }
 else {  
   $error = "Error: Wrong number of Arguments! \n";
@@ -67,22 +70,29 @@ if (!$error) {
 
    # Font Options - Note that some of these are overridden in the multiline output function.
    blackText();
-   prFont( $font );
-   prFontSize ( $fontSize );
+   prFont($font);
+   prFontSize($fontSize);
    prField('State', $stateName) or print "wtf?";
 
    # Output the state name.
    prFontSize(11);
-   prFont("Times-Bold");
+   prFont($boldFont);
    prText(419, 737, $stateName);
 
-   prFontSize(9);
-   prFont("Times-Roman");
+   prFontSize($fontSize);
+   #prFont("Times-Bold");
 
+   # Output "Registration Deadline:" in bold on its own line.
+   prText(316, 710, $deadlineText);
+
+   prFont($font);
    # Convert long string to array of lines (using max width).
    my @deadlineArray = convLineToCol ($maxRegTextWidth, $font, $fontSize, $regDeadline);
-   # Output the registration deadline string (e.g. "Registration Deadline:  30 days before the election.").
-   writeMultiLineStr(316, 710, $lineOffset, $font, $boldFont, \@deadlineArray);
+   # Output the registration deadline string (e.g. "30 days before the election.").
+   writeMultiLineStr(316, 700, $lineOffset, $font, $boldFont, \@deadlineArray);
+
+   #prText(316, 700, $regDeadline);
+
    # Note use of \@ to pass by reference.
 
    # Output the state-specific requirements text.

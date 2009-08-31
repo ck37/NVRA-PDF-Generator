@@ -18,6 +18,7 @@
 
 use PDF::Reuse;
 use PDF::Reuse::Util;
+use Encode qw(encode decode);
 use strict;
 
 ###
@@ -34,8 +35,9 @@ sub convLineToCol { # Convert (Single Long) Line To (Multiline) Column
    my $fontSize     = @_[2];
    my $string       = @_[3];
 
-   # Convert list elements to a newline combined with an asterisk.
-   $string =~ s/<li>/<br>* /g;
+   # Convert list elements to a newline combined with an ASCII dot.
+   my $ascii_dot = chr(149);
+   $string =~ s/<li>/<br>$ascii_dot /g;
    # Add spaces around newlines so that the are properly processed as separate words.
    $string =~ s/<br>/ <br> /g;
    my @words        = split(' ', $string);
@@ -67,13 +69,14 @@ sub convLineToCol { # Convert (Single Long) Line To (Multiline) Column
          $tmpLinePtLen = prStrWidth( $tmpLineText, $font, $fontSize );
 
          if( $tmpLinePtLen <=  $maxWidth) {
-            # If the new lenght is okay, save it as the "last good line"
+            # If the new length is okay, save it as the "last good line"
             $curLineText = $tmpLineText;
          }else {
-            # Insert new line to the begging of the line array
+            # Insert new line to the beginning of the line array.
             push( @lines, $curLineText);
-            # Start the process over with the word that didn't fit this time
+            # Start the process over with the word that didn't fit this time.
             $tmpLineText = "$curWord";
+            $curLineText = $tmpLineText;
          }
       }
   }

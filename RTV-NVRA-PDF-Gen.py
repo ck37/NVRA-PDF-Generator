@@ -35,6 +35,10 @@ state_Data_Dir = "State_Data/" # Must end with '/'
 state_instructions_file = "widget-state-instructions.xml"
  
 ### Beginning of heavy lifting -- do not edit below here!
+
+
+# TODO: Check that pdftk is installed and usable at some point.
+
 state_instructions = xml.dom.minidom.parse(state_Data_Dir + state_instructions_file)
 print "Loaded state instructions file:", state_instructions_file
 
@@ -93,7 +97,7 @@ for state in state_instructions.getElementsByTagName("row"):
  
   # Generate State-Specific Instructions (uses an external Perl script).
   cmd = "perl PDF-State_Instructions-Generator.pl " + instrTempl_pg2 + " " + newInstruc_pg2 + ' "' + name + '" '
-  cmd += '"' + languages[lang]["reg_deadline"] + regDeadline + '" "' + requirements + '"' 
+  cmd += '"' + languages[lang]["reg_deadline"] + '" "' + regDeadline + '" "' + requirements + '"' 
   iP = subprocess.Popen(cmd, shell=True)
  
   # Wait for each PDF creator script to exit before trying to combine them all.
@@ -110,7 +114,7 @@ for state in state_instructions.getElementsByTagName("row"):
   p = subprocess.Popen (cmd, shell=True, stdout=subprocess.PIPE)
   p.wait() # Wait until the subprocess completes.
   print ".",
-     
+    
     
   # Delete all temporary PDF's.
   cmd = "rm " + newCoverPath + "; rm " + newMailerPath + "; rm " + newInstruc_pg2 + "; "
