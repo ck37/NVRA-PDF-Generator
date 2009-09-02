@@ -72,24 +72,33 @@ if (!$error) {
    blackText();
    prFont($font);
    prFontSize($fontSize);
-   prField('State', $stateName) or print "wtf?";
+   prField('State', $stateName);
 
    # Output the state name.
-   prFontSize(11);
-   prFont($boldFont);
-   prText(419, 737, $stateName);
+   prFontSize(10);
+   prFont($boldFont); #TODO: Fix this font and font size.
+   prText(416, 737, $stateName);
 
    prFontSize($fontSize);
    #prFont("Times-Bold");
 
+   my $instructionsTop = 710;
+   my $instructionsLeft = 316;
+   my $curTop = $instructionsTop;
+
    # Output "Registration Deadline:" in bold on its own line.
-   prText(316, 710, $deadlineText);
+   prText($instructionsLeft, $curTop, $deadlineText);
+
+   # Go to the next line.
+   $curTop -= $lineOffset;
 
    prFont($font);
    # Convert long string to array of lines (using max width).
    my @deadlineArray = convLineToCol ($maxRegTextWidth, $font, $fontSize, $regDeadline);
    # Output the registration deadline string (e.g. "30 days before the election.").
-   writeMultiLineStr(316, 700, $lineOffset, $font, $boldFont, \@deadlineArray);
+   writeMultiLineStr($instructionsLeft, $curTop, $lineOffset, $font, $boldFont, \@deadlineArray);
+
+   $curTop -= $lineOffset * ($#deadlineArray + 2);
 
    #prText(316, 700, $regDeadline);
 
@@ -97,7 +106,7 @@ if (!$error) {
 
    # Output the state-specific requirements text.
    my @txtArray = convLineToCol ( $maxRegTextWidth, $font, $fontSize, $text);
-   writeMultiLineStr(316, 650, $lineOffset, $font, $boldFont, \@txtArray); 
+   writeMultiLineStr($instructionsLeft, $curTop, $lineOffset, $font, $boldFont, \@txtArray); 
 
    # Provide the source file to use as our starting point.
    prSinglePage($sourceFile); 

@@ -36,10 +36,10 @@ my  $maxRegTextLines = 10;
 #Setup the font here -- see PDF:Reuse for options
 my $font         = 'H';  # Helvetica
 my $boldFont     = 'HB'; # Helvetica-Bold
-my $fontSize     = 12;
+my $fontSize     = 10;
 
 # Text output options
-my $lineOffset   = $fontSize + 1; # Try $fontSize + 1 or 2
+my $lineOffset   = $fontSize + 2; # Try $fontSize + 1 or 2
 
 my  $error;       
 my  $numArgs     = $#ARGV + 1;
@@ -89,14 +89,20 @@ if (!$error){ # If there were no errors execute the main program block
    # Waring: may overrun space provided 
    my @txtArray = convLineToCol ( $maxRegTextWidth, $font, $fontSize, $regDeadline);
 
+   my $leftPosition = 355;
+
    # Note that txtArray is being passed by reference!
-   writeMultiLineStr( 365, 450, $lineOffset, $font, $boldFont, \@txtArray); 
+   writeMultiLineStr( $leftPosition, 450, $lineOffset, $font, $boldFont, \@txtArray); 
 
    # Write out the address lines on the PDF
-   prText( 365, 550, $lineOne);    # 1st Address Line
-   prText( 365, 535, $lineTwo);    # 2nd Address Line
-   prText( 365, 520, $lineThree);  # 3rd Address Line
-   prText( 365, 505, $lineFour);   # 4th Address Line
+   my $addressTop = 550;
+   prText( $leftPosition, $addressTop, $lineOne);    # 1st Address Line
+   $addressTop -= $lineOffset;
+   prText( $leftPosition, $addressTop, $lineTwo);    # 2nd Address Line
+   $addressTop -= $lineOffset;
+   prText( $leftPosition, $addressTop, $lineThree);  # 3rd Address Line
+   $addressTop -= $lineOffset;
+   prText( $leftPosition, $addressTop, $lineFour);   # 4th Address Line
 
    # Provide the source file to use as our starting point
    prSinglePage($sourceFile); 

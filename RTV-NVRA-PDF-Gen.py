@@ -26,8 +26,8 @@ from xml.dom.minidom import Node
 # <State Abbreviation>-NRVA-<Language_Abbreviation>.pdf
  
 # Script variables
-languages = {"English": {"abbrv": "en", "reg_deadline": "Registration Deadline: "},
-  "Spanish": {"abbrv": "es", "reg_deadline": "Es reg deadline:"}} # List each language to be used.
+languages = {"English": {"abbrv": "en", "reg_deadline": "Registration Deadline"},
+  "Spanish": {"abbrv": "es", "reg_deadline": "Es Reg Deadline"}} # List each language to be used.
 PDF_Assembly_Dir = "PDF_Assembly_Area/" # Must end with '/'
 template_PDF_Dir = "Template_PDFs/" # Must end with '/'
 final_PDF_Dir = "Final_PDFs/" # Must end with '/'
@@ -96,8 +96,8 @@ for state in state_instructions.getElementsByTagName("row"):
   mP = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
  
   # Generate State-Specific Instructions (uses an external Perl script).
-  cmd = "perl PDF-State_Instructions-Generator.pl " + instrTempl_pg2 + " " + newInstruc_pg2 + ' "' + name + '" '
-  cmd += '"' + languages[lang]["reg_deadline"] + '" "' + regDeadline + '" "' + requirements + '"' 
+  cmd = "perl PDF-State_Instructions-Generator.pl " + instrTempl_pg2 + " " + newInstruc_pg2 + ' "' + name.upper() + '" '
+  cmd += '"' + languages[lang]["reg_deadline"] + '" "' + regDeadline + '" "' + requirements.replace('"', '\\"') + '"' 
   iP = subprocess.Popen(cmd, shell=True)
  
   # Wait for each PDF creator script to exit before trying to combine them all.
